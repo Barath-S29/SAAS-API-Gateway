@@ -8,7 +8,7 @@ observability (structured logging, Prometheus/Grafana).
 Built as a learning project to demonstrate backend engineering
 fundamentals - concurrency-safe rate limiting, cache correctness,
 idempotent async billing - not as a commercial product. Full V1 scope
-and non-goals are documented in `docs/architecture_decisions.md`.
+and non-goals are documented in [`docs/architecture_decisions.md`](docs/architecture_decisions.md)..
 
 ## Status
 
