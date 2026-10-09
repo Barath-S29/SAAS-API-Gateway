@@ -6,13 +6,13 @@ async usage-based billing via Celery, and production-oriented
 observability (structured logging, Prometheus/Grafana).
 
 Built as a learning project to demonstrate backend engineering
-fundamentals — concurrency-safe rate limiting, cache correctness,
-idempotent async billing — not as a commercial product. Full V1 scope
+fundamentals - concurrency-safe rate limiting, cache correctness,
+idempotent async billing - not as a commercial product. Full V1 scope
 and non-goals are documented in `docs/architecture_decisions.md`.
 
 ## Status
 
-**Phase 2 (Database & Identity) — in progress.**
+**Phase 2 (Database & Identity) - in progress.**
 SQLAlchemy models and the initial Alembic migration are complete and
 tested against a real Postgres instance. Auth endpoints (signup/login)
 and the gateway proxy are not yet implemented.
@@ -44,7 +44,7 @@ alembic upgrade head
 A `docker-compose.yml` for one-command local setup (Postgres + Redis)
 is planned for the Phase 1 foundations work and not yet present.
 
-## Project structure (target — V1 complete)
+## Project structure (target - V1 complete)
 
 Not everything below exists yet; this is the structure the project is
 building toward. Directories without files yet contain a `.gitkeep`.
