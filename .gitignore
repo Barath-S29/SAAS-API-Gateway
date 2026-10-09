@@ -1,0 +1,32 @@
+# --- Secrets: never commit real values ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Virtual environments ---
+.venv/
+venv/
+
+# --- Alembic: IMPORTANT ---
+# Migration files in alembic/versions/*.py are versioned schema history —
+# they must be committed, same as application code. Only caches inside
+# alembic/ get ignored, never the migration scripts themselves.
+alembic/__pycache__/
+alembic/versions/__pycache__/
+
+# --- Docker / local data volumes (added when Phase 1 Docker work lands) ---
+*.pgdata/
+
+# --- Editor / OS noise ---
+.vscode/
+.idea/
+.DS_Store
