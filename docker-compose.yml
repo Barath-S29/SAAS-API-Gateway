@@ -1,0 +1,54 @@
+# Local development infrastructure only: Postgres and Redis.
+# The FastAPI app runs on the host (in the venv) for now; it gets its own
+# Dockerfile and a service here later, when we reach deployment work.
+#
+# Credentials are read from .env (gitignored) -- never hardcode them here.
+# The ":?" form makes `docker compose` fail immediately, with this message,
+# if a variable is missing, instead of starting a database with an empty password.
+
+services:
+  postgres:
+    # Major version pinned to match what Amazon RDS offers (PostgreSQL 18).
+    # Minor/patch releases within a major version are compatible.
+    image: postgres:18
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+    ports:
+      # Format is HOST:CONTAINER. 127.0.0.1 prefix: reachable only from this
+      # machine (without it Docker publishes on every network interface).
+      # Only the HOST side is configurable: change POSTGRES_PORT in .env if
+      # 5432 is taken or reserved on your machine. The container-side 5432
+      # never changes.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # The postgres:18+ image keeps its data under /var/lib/postgresql
+      # (it was /var/lib/postgresql/data up to version 17). Mounting the
+      # old path on 18 would NOT persist data.
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      # "$$" stops Compose from interpolating; the shell INSIDE the
+      # container expands these from the container's environment.
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    # Pinned to a minor version. No named volume: in V1, Redis holds rate-limit
+    # counters and cached responses, which are disposable by design.
+    image: redis:8.6
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  # Named volume: survives `docker compose down`, deleted only by `down -v`.
+  pgdata:
