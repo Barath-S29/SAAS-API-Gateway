@@ -37,6 +37,11 @@ class Tenant(Base):
         nullable=False,
     )
 
+    # Both defaults are intentional; do not "clean up" one of them.
+    # default=      -> Python-side: SQLAlchemy fills it in, ORM inserts only.
+    # server_default -> a real DB-level DEFAULT clause: applies to ANY insert
+    #                   (raw SQL, admin scripts, other services). Without it,
+    #                   a raw INSERT omitting this column hits NOT NULL.
     is_active: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=True, server_default="true"
     )
