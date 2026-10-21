@@ -23,26 +23,26 @@ FastAPI · SQLAlchemy 2.0 · Alembic · PostgreSQL · Redis · Celery ·
 argon2-cffi · Docker · Nginx · GitHub Actions · Pytest · Loguru ·
 Prometheus/Grafana
 
-## Getting started (current state)
+## Getting started 
+
+Requires Python 3.12 and Docker Desktop.
 
 ```bash
-# 1. Clone and enter the repo
-git clone <repo-url> && cd gateway
 
-# 2. Create a virtual environment and install dependencies
-python3 -m venv .venv && source .venv/bin/activate
+git clone https://github.com/Barath-S29/SAAS-API-Gateway.git && cd SAAS-API-Gateway
+
+python -m venv .venv
+.venv\Scripts\Activate.ps1          # Windows PowerShell
+# source .venv/bin/activate         # Linux / macOS
 pip install -r requirements.txt
 
-# 3. Configure environment
-cp .env.example .env
-# edit .env with your local Postgres connection string
-
-# 4. Run migrations against a running Postgres instance
-alembic upgrade head
+cp .env.example .env                # Windows: Copy-Item .env.example .env
+docker compose up -d                # Postgres 18 + Redis 8.6, localhost only
+alembic upgrade head                # schema + seeded Free/Pro plans
 ```
 
-A `docker-compose.yml` for one-command local setup (Postgres + Redis)
-is planned for the Phase 1 foundations work and not yet present.
+If port 5432 is already in use or reserved on your machine, set `POSTGRES_PORT`
+in `.env` (for example `5433`) and use the same port in `DATABASE_URL`.
 
 ## Project structure (target - V1 complete)
 
