@@ -32,7 +32,10 @@ class ApiKey(Base):
         index=True,
     )
 
-    key_prefix: Mapped[str] = mapped_column(String(8), nullable=False, index=True)
+    # "gw_live_" (8 chars, the same for every key) + the first 8 characters of
+    # the random secret. It must be wider than the static label, otherwise
+    # every key shares one prefix and this index narrows nothing.
+    key_prefix: Mapped[str] = mapped_column(String(16), nullable=False, index=True)
     key_hash: Mapped[str] = mapped_column(String, unique=True, nullable=False)
 
     # Both defaults are intentional; do not "clean up" one of them.
